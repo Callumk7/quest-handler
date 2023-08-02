@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IGDBGame, QuestError, arrayIGDBGameSchema } from "../../types";
-import prisma from "../../prisma/client";
+import { prisma } from "../../prisma/client";
 import redis from "../../redis/client";
 
 export const uploadGames = async (req: Request, res: Response, next: NextFunction) => {

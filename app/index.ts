@@ -3,7 +3,7 @@ import "dotenv/config";
 import { gamesRouter } from "./routes/games";
 import { logTime } from "./middleware/middleware";
 import responseTime from "response-time";
-import prisma from "../prisma/client";
+import { prisma } from "../prisma/client";
 import redis from "../redis/client";
 
 // redis init
