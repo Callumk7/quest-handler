@@ -2,15 +2,14 @@
 	"name": "quest-handler",
 	"version": "0.0.1",
 	"description": "",
-	"main": "index.js",
+	"main": "app/index.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "nodemon --watch \"*.ts\" --watch \"*,json\" --exec \"ts-node\" ./app/index.ts",
 		"build": "tsc",
 		"start": "node ./dist/app/index.js"
 	},
-	"keywords": [],
-	"author": "",
+	"author": "Callum Kloos",
 	"license": "ISC",
 	"dependencies": {
 		"@clerk/clerk-sdk-node": "^4.12.1",
