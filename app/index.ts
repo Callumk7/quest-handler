@@ -15,6 +15,10 @@ const getGameIds = async () => {
 		select: {
 			gameId: true,
 		},
+		orderBy: {
+			createdAt: "desc",
+		},
+		take: 100,
 	});
 
 	const gameIdArray: number[] = [];
