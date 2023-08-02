@@ -1,4 +1,4 @@
-import { IGDBGame } from "../../types";
+/* import { IGDBGame } from "../../types";
 
 async function POST(req: NextRequest) {
 	const headersList = headers();
@@ -33,4 +33,4 @@ const createJob = (type: string, payload: IGDBGame) => {
 	};
 
 	return job;
-};
+}; */
