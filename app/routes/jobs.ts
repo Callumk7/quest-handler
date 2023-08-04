@@ -34,3 +34,20 @@ const createJob = (type: string, payload: IGDBGame) => {
 
 	return job;
 }; */
+
+import { NextFunction, Request, Response, Router } from "express";
+import { logTime } from "../middleware/middleware";
+import { checkForBody, validateBody } from "../middleware/validation";
+import { checkGameCache } from "../middleware/cache";
+import { addGamesToCache, uploadGames } from "../controllers/uploadGames";
+
+export const jobsRouter = Router();
+
+const jobsEntryHandler = (req: Request, res: Response, next: NextFunction) => {
+	console.log("Jobs route reached");
+	next();
+};
+
+// const jobsRouteHandlerArray = [jobValidator, addJobToQueue]
+
+jobsRouter.use("/", jobsEntryHandler);

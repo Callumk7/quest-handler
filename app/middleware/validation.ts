@@ -22,8 +22,9 @@ export const validateBody = (req: Request, res: Response, next: NextFunction) =>
 		req.games = gamesArray;
 
 		console.log("body validated");
+
 		// respond to frontline server, request is captured
-		res.send("request receievd");
+		res.send("request received");
 
 		// proceed with processing...
 		next();

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { IGDBGame, QuestError, arrayIGDBGameSchema } from "../../types";
+import { Artwork, IGDBGame, Job, QuestError, arrayIGDBGameSchema } from "../../types";
 import { prisma } from "../../prisma/client";
 import redis from "../../redis/client";
 
@@ -9,7 +9,7 @@ export const uploadGames = async (req: Request, res: Response, next: NextFunctio
 	next();
 };
 
-async function uploadGameArray(gameArray: IGDBGame[]): Promise<{ gameId: number }[]> {
+async function uploadGameArray(gameArray: IGDBGame[]) {
 	let processedGameCount = 0;
 
 	if (gameArray) {
@@ -39,11 +39,10 @@ async function uploadGameArray(gameArray: IGDBGame[]): Promise<{ gameId: number 
 			console.log(`processed ${processedGameCount} promises`);
 		}
 
-		const processedGames = await Promise.all(upsertGamePromises);
-		processedGames.forEach((game) => console.log(game));
-		return processedGames;
+		Promise.all(upsertGamePromises).then(() => console.log("uploaded games"));
+		return;
 	}
-	return [];
+	return;
 }
 
 export const addGamesToCache = (req: Request, res: Response, next: NextFunction) => {
@@ -53,8 +52,88 @@ export const addGamesToCache = (req: Request, res: Response, next: NextFunction)
 	}
 
 	gameIdArray.forEach(async (gameId) => {
-		await redis.sadd("gameIds", gameId);
+		redis.sadd("gameIds", gameId).then(() => console.log("updated cache"));
 	});
-	console.log("updated cache");
+	next();
+};
+
+export const createJobs = async (req: Request, res: Response, next: NextFunction) => {
+	// for each game in req.games, we want to create jobs for artwork, storyline, genre
+
+	const redisPromises = [];
+	let promiseCount = 0;
+	for (const game of req.games!) {
+		if (game.storyline) {
+			const job: Job = {
+				id: new Date().getTime() + game.id + 0,
+				type: "storyline",
+				payload: {
+					gameId: game.id,
+					storyline: game.storyline,
+				},
+			};
+
+			const jobJson = JSON.stringify(job);
+			redisPromises.push(redis.rpush("jobs", jobJson));
+			promiseCount += 1;
+		}
+		if (game.aggregated_rating && game.aggregated_rating_count) {
+			const job: Job = {
+				id: new Date().getTime() + game.id + 1,
+				type: "rating",
+				payload: {
+					gameId: game.id,
+					rating: {
+						aggregated_rating: game.aggregated_rating,
+						aggregated_rating_count: game.aggregated_rating_count,
+					},
+				},
+			};
+
+			const jobJson = JSON.stringify(job);
+			redisPromises.push(redis.rpush("jobs", jobJson));
+			promiseCount += 1;
+		}
+		if (game.genres) {
+			const job: Job = {
+				id: new Date().getTime() + game.id + 2,
+				type: "genre",
+				payload: {
+					gameId: game.id,
+					genres: game.genres,
+				},
+			};
+
+			const jobJson = JSON.stringify(job);
+			redisPromises.push(redis.rpush("jobs", jobJson));
+			promiseCount += 1;
+		}
+		const artworkPayload: Artwork[] = [];
+		for (const artwork of game.artworks) {
+			artworkPayload.push({ type: "artwork", image_id: artwork.image_id });
+		}
+		if (game.screenshots) {
+			for (const screenshot of game.screenshots) {
+				artworkPayload.push({
+					type: "screenshot",
+					image_id: screenshot.image_id,
+				});
+			}
+		}
+		const job: Job = {
+			id: new Date().getTime() + game.id + 2,
+			type: "artwork",
+			payload: {
+				gameId: game.id,
+				artwork: artworkPayload,
+			},
+		};
+		const jobJson = JSON.stringify(job);
+		redisPromises.push(redis.rpush("jobs", jobJson));
+		promiseCount += 1;
+
+		console.log(`Promises created: ${promiseCount}`);
+	}
+	Promise.all(redisPromises).then(() => console.log("jobs added to queue"));
 	next();
 };

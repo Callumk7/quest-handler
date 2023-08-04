@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { logTime } from "../middleware/middleware";
 import { checkForBody, validateBody } from "../middleware/validation";
 import { checkGameCache } from "../middleware/cache";
-import { addGamesToCache, uploadGames } from "../controllers/uploadGames";
+import { addGamesToCache, createJobs, uploadGames } from "../controllers/uploadGames";
 
 export const gamesRouter = Router();
 
@@ -18,6 +18,7 @@ const handlerArray = [
 	checkGameCache,
 	uploadGames,
 	addGamesToCache,
+	createJobs,
 ];
 
 gamesRouter.post("/", handlerArray);

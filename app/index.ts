@@ -5,6 +5,7 @@ import { logTime } from "./middleware/middleware";
 import responseTime from "response-time";
 import { prisma } from "../prisma/client";
 import redis from "../redis/client";
+import { processInitialJobs } from "../redis/jobs";
 
 // redis init
 // we are pumping our existing game ids into a redis cache
@@ -53,3 +54,5 @@ app.use("/games", gamesRouter);
 app.listen(port, () => {
 	console.log(`listenening on port ${port}`);
 });
+
+processInitialJobs().catch(console.error);
