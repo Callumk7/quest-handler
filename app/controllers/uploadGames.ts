@@ -46,6 +46,8 @@ async function uploadGameArray(gameArray: IGDBGame[]) {
 }
 
 export const addGamesToCache = (req: Request, res: Response, next: NextFunction) => {
+	next();
+	// games can be added to the cache async
 	const gameIdArray: number[] = [];
 	for (const game of req.games!) {
 		gameIdArray.push(game.id);
@@ -54,7 +56,6 @@ export const addGamesToCache = (req: Request, res: Response, next: NextFunction)
 	gameIdArray.forEach(async (gameId) => {
 		redis.sadd("gameIds", gameId).then(() => console.log("updated cache"));
 	});
-	next();
 };
 
 export const createJobs = async (req: Request, res: Response, next: NextFunction) => {
