@@ -23,6 +23,7 @@ async function uploadGameArray(gameArray: IGDBGame[]) {
 				create: {
 					gameId: game.id,
 					title: game.name,
+					releaseDate: game.first_release_date,
 					cover: {
 						create: {
 							imageId: game.cover.image_id,
