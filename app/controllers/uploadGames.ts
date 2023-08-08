@@ -23,6 +23,7 @@ async function uploadGameArray(gameArray: IGDBGame[]) {
 				create: {
 					gameId: game.id,
 					title: game.name,
+					releaseDate: game.first_release_date,
 					cover: {
 						create: {
 							imageId: game.cover.image_id,
@@ -39,8 +40,7 @@ async function uploadGameArray(gameArray: IGDBGame[]) {
 			console.log(`processed ${processedGameCount} promises`);
 		}
 
-		Promise.all(upsertGamePromises).then(() => console.log("uploaded games"));
-		return;
+		await Promise.all(upsertGamePromises).then(() => console.log("uploaded games"));
 	}
 	return;
 }
@@ -66,7 +66,7 @@ export const createJobs = async (req: Request, res: Response, next: NextFunction
 	for (const game of req.games!) {
 		if (game.storyline) {
 			const job: Job = {
-				id: new Date().getTime() + game.id + 0,
+				id: Number(String(new Date().getTime()) + String(game.id) + String(0)),
 				type: "storyline",
 				payload: {
 					gameId: game.id,
@@ -80,7 +80,7 @@ export const createJobs = async (req: Request, res: Response, next: NextFunction
 		}
 		if (game.aggregated_rating && game.aggregated_rating_count) {
 			const job: Job = {
-				id: new Date().getTime() + game.id + 1,
+				id: Number(String(new Date().getTime()) + String(game.id) + String(1)),
 				type: "rating",
 				payload: {
 					gameId: game.id,
@@ -97,7 +97,7 @@ export const createJobs = async (req: Request, res: Response, next: NextFunction
 		}
 		if (game.genres) {
 			const job: Job = {
-				id: new Date().getTime() + game.id + 2,
+				id: Number(String(new Date().getTime()) + String(game.id) + String(2)),
 				type: "genre",
 				payload: {
 					gameId: game.id,
@@ -122,7 +122,7 @@ export const createJobs = async (req: Request, res: Response, next: NextFunction
 			}
 		}
 		const job: Job = {
-			id: new Date().getTime() + game.id + 2,
+			id: Number(String(new Date().getTime()) + String(game.id) + String(3)),
 			type: "artwork",
 			payload: {
 				gameId: game.id,
