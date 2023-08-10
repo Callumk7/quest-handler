@@ -56,6 +56,8 @@ export const addGamesToCache = (req: Request, res: Response, next: NextFunction)
 	gameIdArray.forEach(async (gameId) => {
 		redis.sadd("gameIds", gameId).then(() => console.log("updated cache"));
 	});
+
+	redis.expire("gameIds", 3600);
 };
 
 export const createJobs = async (req: Request, res: Response, next: NextFunction) => {
