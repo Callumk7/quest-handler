@@ -112,8 +112,10 @@ export const createJobs = async (req: Request, res: Response, next: NextFunction
 			promiseCount += 1;
 		}
 		const artworkPayload: Artwork[] = [];
-		for (const artwork of game.artworks) {
-			artworkPayload.push({ type: "artwork", image_id: artwork.image_id });
+		if (game.artworks) {
+			for (const artwork of game.artworks) {
+				artworkPayload.push({ type: "artwork", image_id: artwork.image_id });
+			}
 		}
 		if (game.screenshots) {
 			for (const screenshot of game.screenshots) {
