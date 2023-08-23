@@ -20,21 +20,19 @@ const artworkType = z.object({
 	image_id: z.string(),
 });
 
-export const IGDBGameSchema = z.object({
+const IGDBGameSchema = z.object({
 	id: z.number(),
-	genres: z.array(genreType).optional(), // Will accept array of genres or undefined
+	genres: z.array(genreType).optional(),
 	name: z.string(),
 	cover: coverType,
-	storyline: z.string().optional(), // Will accept string or undefined
-	screenshots: z.array(screenshotType).optional(), // Will accept array of screenshot or undefined
+	storyline: z.string().optional(),
+	screenshots: z.array(screenshotType).optional(),
 	artworks: z.array(artworkType),
-	aggregated_rating: z.number().optional(), // Will accept number or undefined
-	aggregated_rating_count: z.number().optional(), // Will accept number or undefined
-	involved_companies: z.array(z.number()).optional(), // Will accept array of numbers or undefined
+	aggregated_rating: z.number().optional(),
+	aggregated_rating_count: z.number().optional(),
+	involved_companies: z.array(z.number()).optional(),
 	first_release_date: z.number().optional(),
 });
-
-export const arrayIGDBGameSchema = z.array(IGDBGameSchema);
 
 type IGDBGame = z.infer<typeof IGDBGameSchema>;
 // type IGDBGame = {
