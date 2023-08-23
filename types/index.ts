@@ -35,6 +35,7 @@ const IGDBGameSchema = z.object({
 });
 
 type IGDBGame = z.infer<typeof IGDBGameSchema>;
+export const arrayIGDBGameSchema = z.array(IGDBGameSchema);
 // type IGDBGame = {
 // 	id: number;
 // 	url: string;
