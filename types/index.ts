@@ -27,7 +27,7 @@ const IGDBGameSchema = z.object({
 	cover: coverType,
 	storyline: z.string().optional(),
 	screenshots: z.array(screenshotType).optional(),
-	artworks: z.array(artworkType),
+	artworks: z.array(artworkType).optional(),
 	aggregated_rating: z.number().optional(),
 	aggregated_rating_count: z.number().optional(),
 	involved_companies: z.array(z.number()).optional(),
